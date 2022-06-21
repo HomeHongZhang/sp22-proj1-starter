@@ -31,18 +31,78 @@ static void set_board_at(game_state_t* state, int x, int y, char ch) {
 /* Task 1 */
 game_state_t* create_default_state() {
   // TODO: Implement this function.
-  return NULL;
+  game_state_t * state_ptr = (game_state_t *)malloc(sizeof(struct game_state_t));
+  state_ptr->x_size = board_width;
+  state_ptr->y_size = board_length;
+  state_ptr->board = (char*)malloc(state_ptr->x_size*sizeof(char));
+  for (int i = 0; i < state_ptr->x_size; i++)
+  {
+    state_ptr->board[i] = (char*)malloc(state_ptr->y_size*sizeof(char));
+  }
+
+  // create the wall
+  for (int i = 0; i < state_ptr->x_size; i++)
+  {
+    for (int j = 0; j < state_ptr->y_size; j++)
+    {
+      if (i == 0 || i == state_ptr->x_size-1)
+      {
+        state_ptr->board[i][j] = '#';
+      }
+      if (j == 0 || j == state_ptr->y_size-1)
+      {
+        state_ptr->board[i][j] = '#';
+      }
+    }
+  }
+  // the fruit
+  state_ptr->board[fruit_row][fruit_col] = '*';
+
+  state_ptr->num_snakes = board_snake_num;
+  state_ptr->snakes = (snake_t*)malloc(state_ptr->num_snakes*sizeof(struct snake_t));
+  
+
+  return state_ptr;
 }
 
 /* Task 2 */
-void free_state(game_state_t* state) {
+void free_state(game_state_t* state_ptr) {
   // TODO: Implement this function.
+  free(state_ptr->snakes);
+  state_ptr->snakes = NULL;
+
+  for (int i = 0; i < state_ptr->x_size; i++)
+  {
+    free(state_ptr->board[i]);
+    state_ptr->board[i] = NULL;
+  }
+
+  free(state_ptr->board);
+  state_ptr->board = NULL;
+
   return;
 }
 
 /* Task 3 */
 void print_board(game_state_t* state, FILE* fp) {
   // TODO: Implement this function.
+  int ret = fopen(fp, 'w');
+  if (ret == -1)
+  {
+    fprintf(stderr, "file open failed");
+    return;
+  }
+
+  for (int i = 0; i < state->x_size; i++)
+  {
+    for (int j = 0; j < state->y_size; j++)
+    {
+      fprintf(fp, state->board[i][j]);
+    }
+    fprintf(fp, '\n');
+  }
+
+  fclose(fp);
   return;
 }
 
