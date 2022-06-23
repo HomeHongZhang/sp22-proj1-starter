@@ -13,16 +13,6 @@ typedef struct snake_t {
   bool live;
 } snake_t;
 
-const unsigned int board_width = 10;
-const unsigned int board_length = 14;
-const unsigned int board_snake_num = 1;
-const unsigned int fruit_row = 2;
-const unsigned int fruit_col = 9;
-const unsigned int tail_row = 4;
-const unsigned int tail_col = 4;
-const unsigned int head_row = 4;
-const unsigned int head_col = 5;
-
 typedef struct game_state_t {
   unsigned int x_size;
   unsigned int y_size;
