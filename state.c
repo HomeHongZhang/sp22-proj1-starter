@@ -287,13 +287,47 @@ void update_state(game_state_t* state, int (*add_food)(game_state_t* state)) {
 /* Task 5 */
 game_state_t* load_board(char* filename) {
   // TODO: Implement this function.
-  FILE * fp = fopen(filename, 'rb');
+  FILE * fp = fopen(filename, "r");
   if (NULL == fp)
   {
     fprintf(stderr, "%s at %s:%d\n", "file open error at", __FILE__, __LINE__);
     return NULL;
   }
-  return NULL;
+
+  game_state_t * state = (game_state_t *)malloc(sizeof(struct game_state_t));
+  state->x_size = 0;
+  state->y_size = 0;
+  state->board = NULL;
+  state->num_snakes = 0;
+  state->snakes = NULL;
+
+  char * line_str = NULL;
+  size_t line_len = 0;
+  while (getline(&line_str, &line_len, fp) != -1)
+  {
+    state->x_size = strlen(line_str)-1;
+    state->y_size += 1;
+  }
+  state->board = (char **)malloc(state->y_size * sizeof(char*));
+  for (int idx = 0; idx < state->y_size; idx++)
+  {
+    state->board[idx] = (char*)malloc(state->x_size*sizeof(char));
+  }
+
+  rewind(fp);
+  size_t row = 0;
+  while (getline(&line_str, &line_len, fp) != -1)
+  {
+    for (int i = 0; i < strlen(line_str); i++)
+    {
+      state->board[row][i] = line_str[i];
+    }
+    row += 1;    
+  }
+
+  fclose(fp);
+
+  return state;
 }
 
 /* Task 6.1 */
