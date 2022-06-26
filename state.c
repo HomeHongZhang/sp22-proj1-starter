@@ -357,7 +357,7 @@ static void find_head(game_state_t* state, int snum) {
     y += incr_y(state->board[y][x]);     
     x += incr_x(state->board[y][x]);    
     
-    if (state->board[y][x] == ' ' || state->board[y][x] == 'x' || state->board[y][x] == '#')  break;
+    if (state->board[y][x] == ' ' || state->board[y][x] == 'x' || state->board[y][x] == '#' || state->board[y][x] == '*')  break;
   }
 
   // update the coordinates of that snake's head 
