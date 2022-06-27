@@ -268,16 +268,42 @@ void update_state(game_state_t* state, int (*add_food)(game_state_t* state)) {
   for (int i = 0; i < state->num_snakes; i++)
   {
     char head_next = next_square(state, i);
-   
+    size_t head_x = state->snakes[i].head_x;
+    size_t head_y = state->snakes[i].head_y;
+    
     update_head(state, i);
-
+       
     if (head_next == '*')
     {     
      add_food(state);
     }
     else
     {
-      update_tail(state, i);
+      //update_tail(state, i);
+      char head_or_next = state->board[head_y][head_x];
+      if (head_or_next == '#' || head_or_next == 'x') // head to the board boundary or dead
+      {
+        continue;
+      }
+
+      unsigned int tail_x = state->snakes[i].tail_x;
+      unsigned int tail_y = state->snakes[i].tail_y;
+      char tail = state->board[tail_y][tail_x];
+      
+      // udpate board
+      state->board[tail_y][tail_x] = ' ';
+      switch (tail)
+      {
+        case 'w': {tail_y--; break;}
+        case 'a': {tail_x--; break;}
+        case 'd': {tail_x++; break;}
+        case 's': {tail_y++; break;}
+      }
+      state->board[tail_y][tail_x] = body_to_tail(state->board[tail_y][tail_x]);
+
+      // udpate snake
+      state->snakes[i].tail_x = tail_x;
+      state->snakes[i].tail_y = tail_y;
     }
   }
 
